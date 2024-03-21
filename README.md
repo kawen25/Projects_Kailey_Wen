@@ -86,8 +86,8 @@ We can use a heatmap to help us visualize the relationship.
 
 <iframe
   src="assets/heatmap.html"
-  width="600"
-  height="400"
+  width="800"
+  height="600"
   frameborder="0"
 ></iframe>
 

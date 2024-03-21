@@ -18,6 +18,8 @@ Variables of Interest:
 | OUTAGE.DURATION|Duration of outage events (in minutes)|
 | DEMAND.LOSS.MW|Amount of peak demand lost during an outage event (in Megawatt)|
 | CUSTOMERS.AFFECTED|Number of customers affected by the power outage event|
+| CAUSE.CATEGORY|Categories of all the events causing the major power outages|
+| CAUSE.CATEGORY.DETAIL|Detailed description of the event categories causing the major power outages|
 
 YEAR- Indicates the year when the outage event occurred
 MONTH- Indicates the month when the outage event occurred
@@ -25,3 +27,6 @@ U.S._STATE- Represents all the states in the continental U.S.
 OUTAGE.DURATION- Duration of outage events (in minutes)
 DEMAND.LOSS.MW- Amount of peak demand lost during an outage event (in Megawatt)
 CUSTOMERS.AFFECTED- Number of customers affected by the power outage event
+CAUSE.CATEGORY- Categories of all the events causing the major power outages
+CAUSE.CATEGORY.DETAIL- Detailed description of the event categories causing the major power outages
+\

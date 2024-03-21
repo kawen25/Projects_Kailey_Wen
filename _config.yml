@@ -3,3 +3,4 @@ plugins:
 - jekyll-remote-theme
 title: [Power Outages]
 description: [This is a data science project investigating the relationship between Power Outages and ...]
+gem "github-pages", group: :jekyll_plugins

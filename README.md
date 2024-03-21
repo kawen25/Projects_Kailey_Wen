@@ -86,7 +86,7 @@ We can use a heatmap to help us visualize the relationship.
 
 <iframe
   src="assets/heatmap.html"
-  width="850"
+  width="900"
   height="600"
   frameborder="0"
 ></iframe>
@@ -103,9 +103,9 @@ By incorporating additional data sources or variables that explain the missingne
 
 **1. Cause Category Detail and Cause Category (MAR)**
 
-**Null Hypothesis:** The missingness of cause category detail is not dependent on cause category
+Null Hypothesis: The missingness of cause category detail is not dependent on cause category
 
-**Alternative Hypothesis:** The missingness of cause category detail is dependent on cause category
+Alternative Hypothesis: The missingness of cause category detail is dependent on cause category
 
 After conducting the permutation test, I found that the p-value is equal to 0. This tells us that the observed difference in distribution is unlikely to occur by random chance alone. Therefore, I have evidence to reject the null hypothesis that the missingness of 'DETAIL.MISSING' is independent of 'CAUSE.CATEGORY'.
 
@@ -115,9 +115,9 @@ Based on this result, I can conclude that there is a significant association bet
 
 **2. Demand Loss (MW) and Outage Duration (MCAR)**
 
-**Null Hypothesis:** The missingness of demand loss is not dependent on outage duration.
+Null Hypothesis: The missingness of demand loss is not dependent on outage duration.
 
-**Alternative Hypothesis:** The missingness of demand loss detail is dependent on outage duration.
+Alternative Hypothesis: The missingness of demand loss detail is dependent on outage duration.
 
 After conducting a permutation test, I get a p-value that is greater than our significance level of 5%.  Since the p-value is relatively high, we fail to reject the null hypothesis. In other words, we do not have sufficient evidence to conclude that there is a significant difference in mean outage duration between instances with and without missing values in 'DEMAND.LOSS.MW'. Thus, I can conclude that it is highly probable that the missigness of 'DEMAND.LOSS.MW' does not depend on 'OUTAGE.DURATION'
 

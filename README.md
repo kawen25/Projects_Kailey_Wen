@@ -11,16 +11,17 @@ The main question that I will be focusing on answering in this project is: What 
 Variables of Interest:
 
 |   Column    |Description |
-|:------------|--------:    |
-| YEAR        | Indicates the year when the outage event occurred  |
-| MONTH       |       2     |    
-| U.S._STATE |       6     |
-| Summer 2021 |       4     |
-| Fall 2021   |      55     |
+|:------------|:--------    |
+| YEAR        |Indicates the year when the outage event occurred|
+| MONTH       |Indicates the month when the outage event occurred|    
+| U.S._STATE  | Represents all the states in the continental U.S.|
+| OUTAGE.DURATION|Duration of outage events (in minutes)|
+| DEMAND.LOSS.MW|Amount of peak demand lost during an outage event (in Megawatt)|
+| CUSTOMERS.AFFECTED|Number of customers affected by the power outage event|
 
 YEAR- Indicates the year when the outage event occurred
 MONTH- Indicates the month when the outage event occurred
 U.S._STATE- Represents all the states in the continental U.S.
 OUTAGE.DURATION- Duration of outage events (in minutes)
-DEMAND.LOSS.MW- Amount of peak demand lost during an outage event (in Megawatt) [but in many cases, total demand is reported]
+DEMAND.LOSS.MW- Amount of peak demand lost during an outage event (in Megawatt)
 CUSTOMERS.AFFECTED- Number of customers affected by the power outage event

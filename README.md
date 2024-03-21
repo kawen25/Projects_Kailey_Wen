@@ -102,7 +102,7 @@ By incorporating additional data sources or variables that explain the missingne
 ### Missingness Dependency
 
 **1. Cause Category Detail and Cause Category (MAR)**
-Let's look at 'CAUSE.CATEGORY.DETAIL' (as it has 471 missing values) and see if its missing values depends on 'CAUSE.CATEGORY'
+
 **Null Hypothesis:** The missingness of cause category detail is not dependent on cause category
 
 **Alternative Hypothesis:** The missingness of cause category detail is dependent on cause category

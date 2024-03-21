@@ -10,11 +10,11 @@ The main question that I will be focusing on answering in this project is: What 
 
 Variables of Interest:
 
-|   Column    | Description |
+|   Column    |Description |
 |:------------|--------:    |
-| Fall 2020   |       3     |
-| Winter 2021 |       2     |    
-| Spring 2021 |       6     |
+| YEAR        | Indicates the year when the outage event occurred  |
+| MONTH       |       2     |    
+| U.S._STATE |       6     |
 | Summer 2021 |       4     |
 | Fall 2021   |      55     |
 

@@ -1,3 +1,7 @@
+# Power Outages
+
+**Author: Kailey Wen**
+
 ## Introduction
 
 The dataset contains major power outage data across the continental U.S. from January 2000 to 2016. Major outages are defined by the Department of Energy as outages that impacted at least 50,000 customers or caused an unplanned firm load loss of at least 300 MW.

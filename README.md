@@ -10,8 +10,8 @@ The main question that I will be focusing on answering in this project is: What 
 
 Variables of Interest:
 
-|   Column    |Description |
-|:------------:|:--------:    |
+|   #Column    |#Description |
+|:------------|:--------    |
 | YEAR        |Indicates the year when the outage event occurred|
 | MONTH       |Indicates the month when the outage event occurred|    
 | U.S._STATE  | Represents all the states in the continental U.S.|

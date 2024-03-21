@@ -25,6 +25,8 @@ The main question that I will be focusing on answering in this project is: What 
 
 ## Data Cleaning and Exploratory Data Analysis
 
+### Data Cleaning
+
 Before we can begin to answer the question, it is imperative that we clean the data appropriately. The data was originally stored in an excel file, so first I had to convert the file into a csv and delete any empty rows and columns.
 
 The power outage start date and time are currently found in separate columns, 'OUTAGE.START.DATE' and 'OUTAGE.START.TIME', respectively. It would make more sense to have this data combined so I converted the time and data column into one pd.TimeStamp column. I have this column named as 'OUTAGE.START'. I then did same thing with the outage restoration time data as it was stored in a similar format.
@@ -42,20 +44,20 @@ After data cleaning, the first five of rows of the cleaned DataFrame looks like 
 |   2015 |       7 | Minnesota    | warm               | severe weather     | nan                     | 2015-07-18 02:00:00 | 2015-07-19 07:00:00  |              1740 |               250000 |
 
 
-# Univariate Analysis
+### Univariate Analysis
 
 Now that we have our data cleaned up, I want to do some Exploratory Data Analysis. Let's look at the distribution of when outages occurred by doing some temporal analysis. First let us look at the distribution of outages for every year in our dataset.
 
 <iframe
   src="assets/outage_dist.html"
-  width="600"
-  height="400"
+  width="800"
+  height="600"
   frameborder="0"
 ></iframe>
 
 The plot above shows the number of power outages every year on the United States. We can see that in the early 2000s there was an upwards trend, leading to a huge spike in 2011. In the more recent years, there has been a general decrease.
 
-# Interesting Aggregates
+### Interesting Aggregates
 
 Now let's look at the distribution of outages across months to see if there is any correlation to power outages and a given month. First we will create a pivot table to aggregate the power outages per month per year.
 Now let's look at the distribution of outages across months to see if there is any correlation to power outages and a given month. First we will create a pivot table to aggregate the power outages per month per year.
@@ -84,20 +86,22 @@ We can use a heatmap to help us visualize the relationship.
 
 <iframe
   src="assets/heatmap.html"
-  width="800"
-  height="600"
+  width="600"
+  height="400"
   frameborder="0"
 ></iframe>
 
-## NMAR Analysis
+## Assessment of Missingness
+
+### NMAR Analysis
 
 Our 'CUSTOMERS.AFFECTED' column has 443 missing values. I believe that the missingness mechanism is most likely NMAR. The reason behind this is that those collecting the data might be less likely to record or report the numbers of customers affected if that value was smaller.
 
 By incorporating additional data sources or variables that explain the missingness mechanism, we can potentially make the missingness of the "Customers Affected" column missing at random (MAR) and address biases in the dataset. An additional column that indicates official outage severity metrics would be helpful in explaining the missingness in 'CUSTOMERS.AFFECTED.' If a specific outage was particularly insignificant in severity, this could explain why 'CUSTOMERS.AFFECTED' might have missing values as less severe outages would be less important to report on. There are several columns in the dataset that can imply severity (duration, demand loss) but upon analysis those columns are not strongly correlated and can't serve as the sole determining factor of severity.
 
-## Assessment of Missingness
+### Missingness Dependency
 
-### 1. Cause Category Detail and Cause Category (MAR)
+**1. Cause Category Detail and Cause Category (MAR)**
 Let's look at 'CAUSE.CATEGORY.DETAIL' (as it has 471 missing values) and see if its missing values depends on 'CAUSE.CATEGORY'
 **Null Hypothesis:** The missingness of cause category detail is not dependent on cause category
 
@@ -109,7 +113,7 @@ Based on this result, I can conclude that there is a significant association bet
 
 
 
-### 2. Demand Loss (MW) and Outage Duration (MCAR)
+**2. Demand Loss (MW) and Outage Duration (MCAR)**
 
 **Null Hypothesis:** The missingness of demand loss is not dependent on outage duration.
 

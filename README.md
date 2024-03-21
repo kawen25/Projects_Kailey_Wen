@@ -1,4 +1,4 @@
-# Introduction
+## Introduction
 
 The dataset contains major power outage data across the continental U.S. from January 2000 to 2016. Major outages are defined by the Department of Energy as outages that impacted at least 50,000 customers or caused an unplanned firm load loss of at least 300 MW.
 
@@ -8,7 +8,7 @@ The dataset used in this analysis comes from Purdue University’s Laboratory fo
 
 The main question that I will be focusing on answering in this project is: What are the characteristics of major power outages with higher severity?
 
-Variables of Interest:
+**Variables of Interest:**
 
 | **Column**|**Description**|
 |:------------|:--------    |
@@ -22,7 +22,8 @@ Variables of Interest:
 | CAUSE.CATEGORY.DETAIL|Detailed description of the event categories causing the major power outages|
 
 
-# Data Cleaning and Exploratory Data Analysis
+
+## Data Cleaning and Exploratory Data Analysis
 
 Before we can begin to answer the question, it is imperative that we clean the data appropriately. The data was originally stored in an excel file, so first I had to convert the file into a csv and delete any empty rows and columns.
 
@@ -30,17 +31,18 @@ The power outage start date and time are currently found in separate columns, 'O
 
 All of the numeric columns had values that were stored as strings in the original file ('OUTAGE.DURATION', 'YEAR', 'CUSTOMERS.AFFECTED', and 'DEMAND.LOSS.WMW'). So I converted these columns into integers to ensure that I could work with these columns further in the analysis.
 
-# NMAR Analysis
+## NMAR Analysis
 
 Our 'CUSTOMERS.AFFECTED' column has 443 missing values. I believe that the missingness mechanism is most likely NMAR. The reason behind this is that those collecting the data might be less likely to record or report the numbers of customers affected if that value was smaller.
 
 By incorporating additional data sources or variables that explain the missingness mechanism, we can potentially make the missingness of the "Customers Affected" column missing at random (MAR) and address biases in the dataset. An additional column that indicates official outage severity metrics would be helpful in explaining the missingness in 'CUSTOMERS.AFFECTED.' If a specific outage was particularly insignificant in severity, this could explain why 'CUSTOMERS.AFFECTED' might have missing values as less severe outages would be less important to report on. There are several columns in the dataset that can imply severity (duration, demand loss) but upon analysis those columns are not strongly correlated and can't serve as the sole determining factor of severity.
 
-# Missingness Dependency
+## Missingness Dependency
 
-## 1. Cause Category Detail and Cause Category (MAR)
+### 1. Cause Category Detail and Cause Category (MAR)
 Let's look at 'CAUSE.CATEGORY.DETAIL' (as it has 471 missing values) and see if its missing values depends on 'CAUSE.CATEGORY'
 **Null Hypothesis:** The missingness of cause category detail is not dependent on cause category
+
 **Alternative Hypothesis:** The missingness of cause category detail is dependent on cause category
 
 After conducting the permutation test, I found that the p-value is equal to 0. This tells us that the observed difference in distribution is unlikely to occur by random chance alone. Therefore, I have evidence to reject the null hypothesis that the missingness of 'DETAIL.MISSING' is independent of 'CAUSE.CATEGORY'.
@@ -49,11 +51,12 @@ Based on this result, I can conclude that there is a significant association bet
 
 
 
-## 2. Demand Loss (MW) and Outage Duration (MCAR)
+### 2. Demand Loss (MW) and Outage Duration (MCAR)
 
 **Null Hypothesis:** The missingness of demand loss is not dependent on outage duration.
+
 **Alternative Hypothesis:** The missingness of demand loss detail is dependent on outage duration.
 
 After conducting a permutation test, I get a p-value that is greater than our significance level of 5%.  Since the p-value is relatively high, we fail to reject the null hypothesis. In other words, we do not have sufficient evidence to conclude that there is a significant difference in mean outage duration between instances with and without missing values in 'DEMAND.LOSS.MW'. Thus, I can conclude that it is highly probable that the missigness of 'DEMAND.LOSS.MW' does not depend on 'OUTAGE.DURATION'
 
-# Hypothesis Testing
+## Hypothesis Testing

@@ -24,6 +24,9 @@ The main question that I will be focusing on answering in this project is: What 
 | CUSTOMERS.AFFECTED|Number of customers affected by the power outage event|
 | CAUSE.CATEGORY|Categories of all the events causing the major power outages|
 | CAUSE.CATEGORY.DETAIL|Detailed description of the event categories causing the major power outages|
+|CLIMATE.REGION| U.S. Climate regions as specified by National Centers for Environmental Information (nine climatically consistent regions in continental U.S.A.)|
+|CLIMATE.CATEGORY|This represents the climate episodes corresponding to the years. The categories—“Warm”, “Cold” or “Normal” episodes of the climate are based on a threshold of ± 0.5 °C for the Oceanic Niño Index (ONI)|
+|TOTAL.CUSTOMERS|Annual number of total customers served in the U.S. state|
 
 
 
@@ -33,24 +36,24 @@ The main question that I will be focusing on answering in this project is: What 
 
 Before we can begin to answer the question, it is imperative that we clean the data appropriately. The data was originally stored in an excel file, so first I had to convert the file into a csv and delete any empty rows and columns.
 
-The power outage start date and time are currently found in separate columns, 'OUTAGE.START.DATE' and 'OUTAGE.START.TIME', respectively. It would make more sense to have this data combined so I converted the time and data column into one pd.TimeStamp column. I have this column named as 'OUTAGE.START'. I then did same thing with the outage restoration time data as it was stored in a similar format.
+The power outage start date and time are currently found in separate columns, 'OUTAGE.START.DATE' and `OUTAGE.START.TIME`, respectively. It would make more sense to have this data combined so I converted the time and data column into one pd.TimeStamp column. I have this column named as 'OUTAGE.START'. I then did same thing with the outage restoration time data as it was stored in a similar format.
 
-All of the numeric columns had values that were stored as strings in the original file ('OUTAGE.DURATION', 'YEAR', 'CUSTOMERS.AFFECTED', and 'DEMAND.LOSS.WMW'). So I converted these columns into integers to ensure that I could work with these columns further in the analysis.
+All of the numeric columns had values that were stored as strings in the original file (`OUTAGE.DURATION`, `YEAR`, `CUSTOMERS.AFFECTED`, and `DEMAND.LOSS.WM`). So I converted these columns into integers to ensure that I could work with these columns further in the analysis.
 
 After data cleaning, the first five of rows of the cleaned DataFrame looks like the following:
 
-|   YEAR |   MONTH | U.S._STATE   | CLIMATE.CATEGORY   | CAUSE.CATEGORY     | CAUSE.CATEGORY.DETAIL   | OUTAGE.START        | OUTAGE.RESTORATION   |   OUTAGE.DURATION |   CUSTOMERS.AFFECTED |
-|-------:|--------:|:-------------|:-------------------|:-------------------|:------------------------|:--------------------|:---------------------|------------------:|---------------------:|
-|   2011 |       7 | Minnesota    | normal             | severe weather     | nan                     | 2011-07-01 17:00:00 | 2011-07-03 20:00:00  |              3060 |                70000 |
-|   2014 |       5 | Minnesota    | normal             | intentional attack | vandalism               | 2014-05-11 18:38:00 | 2014-05-11 18:39:00  |                 1 |                  nan |
-|   2010 |      10 | Minnesota    | cold               | severe weather     | heavy wind              | 2010-10-26 20:00:00 | 2010-10-28 22:00:00  |              3000 |                70000 |
-|   2012 |       6 | Minnesota    | normal             | severe weather     | thunderstorm            | 2012-06-19 04:30:00 | 2012-06-20 23:00:00  |              2550 |                68200 |
-|   2015 |       7 | Minnesota    | warm               | severe weather     | nan                     | 2015-07-18 02:00:00 | 2015-07-19 07:00:00  |              1740 |               250000 |
+|   YEAR |   MONTH | U.S._STATE   | CLIMATE.CATEGORY   | CAUSE.CATEGORY     | CAUSE.CATEGORY.DETAIL   | OUTAGE.START        | OUTAGE.RESTORATION   |   OUTAGE.DURATION |   CUSTOMERS.AFFECTED |   DEMAND.LOSS.MW | CLIMATE.REGION     |   TOTAL.CUSTOMERS |
+|-------:|--------:|:-------------|:-------------------|:-------------------|:------------------------|:--------------------|:---------------------|------------------:|---------------------:|-----------------:|:-------------------|------------------:|
+|   2011 |       7 | Minnesota    | normal             | severe weather     | nan                     | 2011-07-01 17:00:00 | 2011-07-03 20:00:00  |              3060 |                70000 |              nan | East North Central |           2595696 |
+|   2014 |       5 | Minnesota    | normal             | intentional attack | vandalism               | 2014-05-11 18:38:00 | 2014-05-11 18:39:00  |                 1 |                  nan |              nan | East North Central |           2640737 |
+|   2010 |      10 | Minnesota    | cold               | severe weather     | heavy wind              | 2010-10-26 20:00:00 | 2010-10-28 22:00:00  |              3000 |                70000 |              nan | East North Central |           2586905 |
+|   2012 |       6 | Minnesota    | normal             | severe weather     | thunderstorm            | 2012-06-19 04:30:00 | 2012-06-20 23:00:00  |              2550 |                68200 |              nan | East North Central |           2606813 |
+|   2015 |       7 | Minnesota    | warm               | severe weather     | nan                     | 2015-07-18 02:00:00 | 2015-07-19 07:00:00  |              1740 |               250000 |              250 | East North Central |           2673531 |               250000 |
 
 
 ### Univariate Analysis
 
-Now that we have our data cleaned up, I want to do some Exploratory Data Analysis. Let's look at the distribution of when outages occurred by doing some temporal analysis. First let us look at the distribution of outages for every year in our dataset.
+With the data cleaned up, I went in to do some Exploratory Data Analysis. Specifically I first looked into the distribution of when outages occurred by doing some temporal analysis. Shown below is the distribution of outages for every year in our dataset.
 
 <iframe
   src="assets/outage_dist.html"
@@ -60,6 +63,31 @@ Now that we have our data cleaned up, I want to do some Exploratory Data Analysi
 ></iframe>
 
 The plot above shows the number of power outages every year on the United States. We can see that in the early 2000s there was an upwards trend, leading to a huge spike in 2011. In the more recent years, there has been a general decrease.
+
+I then decided to look into the relationship between geographical location and outage distribution. Below is a plot of the distribution of power outages across the United States.
+
+<iframe
+  src="assets/outage_dist_US.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+We can see that there are some states that have much higher counts of power outages in comparison to others. California has the highest overall with almost 200 outages. Having some knowledge about the typical climate can also help increase the relevancy of this plot to our investigation on how time, location and climate can impact the number of power outages. The two states with the highest number of outages are California and Texas; while local weather conditions can vary from year to year, both of these states are known for having some of the hottest summer in the United States.
+
+### Bivariate Analysis
+
+Now that we have gotten an idea about how number of outages is distributed across several variables, let's look into the severity of an outage. One could classify severity through several ways. One being the duration of the outage and the other being the number of affected customers. Let's actually look at the relationship between these two to see if longer outages actually end up affecting more customers.
+
+<iframe
+  src="assets/duration_vs_Customers_Affected.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+The above plot shows that the duration of an outage doesn't really have a strong relationship with the number of affected customers. It also shows that most of our data points cluster under 10,000 minutes (~7 days)
+
 
 ### Interesting Aggregates
 
@@ -95,25 +123,50 @@ We can use a heatmap to help us visualize the relationship.
   frameborder="0"
 ></iframe>
 
+The heatmap and pivot table above shows that there isn't too high of a correlation between the month a power outage occurs and the frequency of power outage. However, it does show that there is a slight positive relationship with power outages and months in the summer. One explanation of this could be that people tend to use more electricity during the summer due to the heat. The plot also shows a general increase in power outage over the years which is something we saw in our previous bar plot as well. It also helps to reinforce the logic that power outages have increased over the years as a result of things like growing industrialization. 
+
+
 ## Assessment of Missingness
+
+Before progressing in the investigation, I did an assessment of missingness to determine the mechanisms behind why some columns had missing values.
 
 ### NMAR Analysis
 
-Our 'CUSTOMERS.AFFECTED' column has 443 missing values. I believe that the missingness mechanism is most likely NMAR. The reason behind this is that those collecting the data might be less likely to record or report the numbers of customers affected if that value was smaller.
+Our `CUSTOMERS.AFFECTED` column has 443 missing values. I believe that the missingness mechanism is most likely NMAR. The reason behind this is that those collecting the data might be less likely to record or report the numbers of customers affected if that value was smaller.
 
-By incorporating additional data sources or variables that explain the missingness mechanism, we can potentially make the missingness of the "Customers Affected" column missing at random (MAR) and address biases in the dataset. An additional column that indicates official outage severity metrics would be helpful in explaining the missingness in 'CUSTOMERS.AFFECTED.' If a specific outage was particularly insignificant in severity, this could explain why 'CUSTOMERS.AFFECTED' might have missing values as less severe outages would be less important to report on. There are several columns in the dataset that can imply severity (duration, demand loss) but upon analysis those columns are not strongly correlated and can't serve as the sole determining factor of severity.
+By incorporating additional data sources or variables that explain the missingness mechanism, we can potentially make the missingness of the "Customers Affected" column missing at random (MAR) and address biases in the dataset. An additional column that indicates official outage severity metrics would be helpful in explaining the missingness in `CUSTOMERS.AFFECTED` If a specific outage was particularly insignificant in severity, this could explain why `CUSTOMERS.AFFECTED` might have missing values as less severe outages would be less important to report on. There are several columns in the dataset that can imply severity (duration, demand loss) but upon analysis those columns are not strongly correlated and can't serve as the sole determining factor of severity.
 
 ### Missingness Dependency
 
+I noticed that in the dataset there were 471 missing values in the Cause Detail column. I came to the conclusion that the most likely column that could explain the missingness. To test the theory, I conducted a permutation test. 
+
 **1. Cause Category Detail and Cause Category (MAR)**
+
+Before beginning the test, I looked into the distributions of cause category with and without cause category detail. From the histogram below, we notice there distribution is very different. 
+
+<iframe
+  src="assets/mar_dist.html"
+  width="900"
+  height="600"
+  frameborder="0"
+></iframe>
 
 Null Hypothesis: The missingness of cause category detail is not dependent on cause category
 
 Alternative Hypothesis: The missingness of cause category detail is dependent on cause category
 
-After conducting the permutation test, I found that the p-value is equal to 0. This tells us that the observed difference in distribution is unlikely to occur by random chance alone. Therefore, I have evidence to reject the null hypothesis that the missingness of 'DETAIL.MISSING' is independent of 'CAUSE.CATEGORY'.
+I first created a new column indicating the missingness status of the  cause category detail column, and shuffled this column for our permutation. Since cause category is categorical, I used the total variation distance as my test statistic.
 
-Based on this result, I can conclude that there is a significant association between the missingness of 'DETAIL.MISSING' and the values of 'CAUSE.CATEGORY'. In other words, I can conclude that the reason for missingness in the 'DETAIL.MISSING' column is highly likely to be dependent on the categories of the 'CAUSE.CATEGORY' column. Thus, we can say that the missing mechanism of 'DETAIL.MISSING' is MAR.
+<iframe
+  src="assets/permutation.html"
+  width="900"
+  height="600"
+  frameborder="0"
+></iframe>
+
+After conducting the permutation test, I found that the p-value was equal to 0. This tells me that the observed difference in distribution is unlikely to occur by random chance alone. Therefore, I have evidence to reject the null hypothesis that the missingness of `DETAIL.MISSING` is independent of `CAUSE.CATEGORY`
+
+Based on this result, I can conclude that there is a significant association between the missingness of `DETAIL.MISSING` and the values of `CAUSE.CATEGORY` In other words, I can conclude that the reason for missingness in the `DETAIL.MISSING` column is highly likely to be dependent on the categories of the `CAUSE.CATEGORY` column. Thus, we can say that the missing mechanism of `DETAIL.MISSING` is MAR.
 
 
 
@@ -123,6 +176,78 @@ Null Hypothesis: The missingness of demand loss is not dependent on outage durat
 
 Alternative Hypothesis: The missingness of demand loss detail is dependent on outage duration.
 
-After conducting a permutation test, I get a p-value that is greater than our significance level of 5%.  Since the p-value is relatively high, we fail to reject the null hypothesis. In other words, we do not have sufficient evidence to conclude that there is a significant difference in mean outage duration between instances with and without missing values in 'DEMAND.LOSS.MW'. Thus, I can conclude that it is highly probable that the missigness of 'DEMAND.LOSS.MW' does not depend on 'OUTAGE.DURATION'
+
+After conducting a permutation test, I get a p-value that is greater than our significance level of 5%.  Since the p-value is relatively high, we fail to reject the null hypothesis. In other words, we do not have sufficient evidence to conclude that there is a significant difference in mean outage duration between instances with and without missing values in `DEMAND.LOSS.MW` Thus, I can conclude that it is highly probable that the missigness of `DEMAND.LOSS.MW` does not depend on `OUTAGE.DURATION`
 
 ## Hypothesis Testing
+
+Going back to the topic of the investigation, I want to see if there is an increasing trend of power outages over months where there are higher temperatures. So far in our EDA, we have seen an increase in number of power outages during summer months, which tend to be the months that have higher temperatures. Thus, the next step in this investigation is to conduct a permutation text on the relationship between climate and power outage severity. While there is no official metric to measure power outage severity from this dataset, I will be using customers affected as an indicator of severity for the purposes of this investigation. 
+
+Null Hypothesis: There is no difference in the severity of power outages during summer months compared to the severity across non-summer months. 
+
+Alternative Hypothesis: The severity of power outages is higher during summer months compared to the overall severity across all months. 
+
+Test Statistic: We can use the difference in mean number of affected customers between summer months and non-summer months as our test statistic, where the difference is measured as the mean number of affected customers during summer months minus the mean number of affected customers across all months.
+
+
+In order to conduct this permutation test I had to first create a column that indicated whether the power outage occured during the summer. I labeled this columns `IS.SUMMER` Before I began my testing I decided to do some exploratory data analysis. We can see here that the average number of customers affected is very similar regardless of whether the power outage occured during a summer month or not.
+
+| IS.SUMMER   |   mean |   count |
+|:------------|-------:|--------:|
+| False       | 144597 |     712 |
+| True        | 141312 |     379 |
+
+Next, I wanted to see the distributions visually so I generated the plot below. Once again, it was very clear that the distributions were very similar.
+
+<iframe
+  src="assets/summer_dist.html"
+  width="900"
+  height="600"
+  frameborder="0"
+></iframe>
+
+Moving into the fun part of the investigation, the permutation test. I first shuffled the `CUSTOMERS.AFFECTED` for permutation. The test statistic I decided to use for this test was a difference in means for outages in the summer and outages that weren't in the summer. 
+
+<iframe
+  src="assets/summer_permutation.html"
+  width="900"
+  height="600"
+  frameborder="0"
+></iframe>
+
+After conducting our test , I got a p-value of 0.542. This suggests that under the null hypothesis (that there is no difference in the mean number of affected customers between summer months and non-summer months)
+
+We fail to reject the null hypothesis at conventional significance levels (5%). This means that there is insufficient evidence to conclude that the severity of power outages (measured by the mean number of affected customers) is higher during summer months compared to non-summer months.
+
+In other words, based on the data and the permutation test, we do not have enough evidence to support the alternative hypothesis that the severity of power outages is higher during summer months.
+
+
+## Framing a Prediction Problem
+
+The main goal of this investigation is to develop analysis that can be useful in reducing the negative effects of major power outages. Similarly, access to a predictive model that can successfull predict the severity of a major power outage could be extremely useful for improving response and overall customer safety. In this next section, I will work towards creating an effective predictive model that can predict the severity in terms of a a response variable: the duration of a major power outage. The benefits of such a model are as follows:
+
+- Power companies can provide their customers with information about the duration of how long an outage will occur for. This helps to enhance transparency and communication, leading to higher levels of customer satisfaction and trust.
+
+- Individuals and households can better prepare for power outages by making arrangements for alternative energy sources, securing perishable goods, and planning for temporary accommodations, leading to less disruption and inconvenience.
+
+- Utilities can allocate repair crews, equipment, and supplies more efficiently based on the forecasted severity of an outage, ensuring that resources are deployed where they are needed most and minimizing response times.
+
+## Baseline Model
+
+For our baseline model, we will start with trying to predict `OUTAGE.DURATION` using multiple linear regression with the following features:
+- `MONTH:`Outage duration may vary depending on the month due to seasonal factors such as weather conditions, holidays, or maintenance schedules. For example, winter months might experience longer outage durations due to snowstorms or colder temperatures affecting power lines.
+- `CLIMATE.REGION:` Different climate regions experience different weather patterns, which can affect the frequency and severity of power outages. For instance, regions prone to hurricanes or thunderstorms may have longer outage durations compared to regions with milder climates.
+- `CAUSE.CATEGORY:`The cause of the outage can provide valuable insights into its duration. For example, outages caused by severe weather events like storms or hurricanes might have longer durations compared to outages caused by equipment failures or maintenance.
+- `TOTAL.CUSTOMERS:`The total number of customers affected by an outage can indicate the scale and severity of the event. Areas with higher population densities may experience longer outage durations due to the logistical challenges of restoring power to a larger number of customers.
+
+For the baseline model I decided to use `sklearn` one hot encoding to transform my categorical variables. The RMSE values are relatively close to each other, suggesting that the baseline model is not overfitting the training data too severely. On the other hand, the r^2 tells me that while the model explains some of the variance in the outage duration, there is still a considerable amount of unexplained variability that the model doesn't account for, especially when considering the test data.
+
+## Final Model
+
+## Fairness Analysis
+
+
+
+
+
+

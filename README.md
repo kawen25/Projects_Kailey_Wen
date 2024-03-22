@@ -240,7 +240,7 @@ The main goal of this investigation is to develop analysis that can be useful in
 
 ## Baseline Model
 
-For our baseline model, we will start with trying to predict `OUTAGE.DURATION` using multiple linear regression with the following features:
+For the baseline model, I started with trying to predict `OUTAGE.DURATION` using multiple linear regression with the following features:
 - `MONTH:`Outage duration may vary depending on the month due to seasonal factors such as weather conditions, holidays, or maintenance schedules. For example, winter months might experience longer outage durations due to snowstorms or colder temperatures affecting power lines.
 - `CLIMATE.REGION:` Different climate regions experience different weather patterns, which can affect the frequency and severity of power outages. For instance, regions prone to hurricanes or thunderstorms may have longer outage durations compared to regions with milder climates.
 - `CAUSE.CATEGORY:`The cause of the outage can provide valuable insights into its duration. For example, outages caused by severe weather events like storms or hurricanes might have longer durations compared to outages caused by equipment failures or maintenance.

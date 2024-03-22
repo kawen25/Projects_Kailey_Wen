@@ -171,10 +171,18 @@ Based on this result, I can conclude that there is a significant association bet
 
 
 **2. Demand Loss (MW) and Outage Duration (MCAR)**
+The '`DEMAND.LOSS.MW' column was another column that I saw have a significant number of missing values. Longer and more severe power outages can lead to higher demand loss. When power is unavailable for an extended period, consumers may resort to using alternative sources of energy or reduce their consumption, leading to a higher demand loss. Following a similar process as I did with the cause detail column, I conducted a permutation test to determine the missingness mechanism of demand loss to see if it was dependent on outage duration.
 
 Null Hypothesis: The missingness of demand loss is not dependent on outage duration.
 
-Alternative Hypothesis: The missingness of demand loss detail is dependent on outage duration.
+Alternative Hypothesis: The missingness of demand loss detail is dependent on outage duration.\
+
+<iframe
+  src="assets/permutation2.html"
+  width="900"
+  height="600"
+  frameborder="0"
+></iframe>
 
 
 After conducting a permutation test, I get a p-value that is greater than our significance level of 5%.  Since the p-value is relatively high, we fail to reject the null hypothesis. In other words, we do not have sufficient evidence to conclude that there is a significant difference in mean outage duration between instances with and without missing values in `DEMAND.LOSS.MW` Thus, I can conclude that it is highly probable that the missigness of `DEMAND.LOSS.MW` does not depend on `OUTAGE.DURATION`
@@ -244,10 +252,46 @@ For the baseline model I decided to use `sklearn` one hot encoding to transform 
 
 ## Final Model
 
+For my final model, I chose to use a RandomForestRegressor, which is an ensemble learning method based on decision trees. Random forests combine multiple decision trees and average their predictions to improve generalization and reduce overfitting.
+
+The hyperparameters I chose to tune were n_estimators and max_depth. n_estimators represents the number of trees in the forest, while max_depth controls the maximum depth of each tree. I used GridSearchCV to perform a grid search with 5-fold cross-validation. 
+
+After performing hyperparameter tuning using GridSearchCV, the best hyperparameters found were n_estimators=250 and max_depth=4. This means that the best random forest model had 100 trees and each tree had a maximum depth of 4 levels.
+
+The overall performance of my final model can be evaluated by comparing it to the baseline model and the values that both models got for RMSE and r^2. The RMSE was lower which indicates an improvement in the predictive performance of the model. The decrease in RMSE implies that the final model is making more accurate predictions compared to the baseline model. This reduction in error is beneficial because it means that the model is better capturing the underlying patterns and relationships in the data. Additionally the higher r^2 suggests that the final model explains a larger proportion of the variance in the target variable compared to the baseline model.
+
 ## Fairness Analysis
 
+To perform a fairness analysis of my Final Model, we need to choose two groups to compare and an appropriate evaluation metric. Let's say  compare the performance of the model for states with high population density (Group X) versus states with low population density (Group Y), using RMSE as the evaluation metric.
+
+Choice of Groups X and Y:
+
+Group X: States with total customers above the median.
+
+Group Y: States with total customers at or below the median.
+
+Evaluation Metric:
+RMSE (Root Mean Squared Error): This metric measures the average difference between the predicted and actual outage durations. Lower RMSE indicates better model performance.
+
+Null Hypothesis: The model's RMSE for states with total customers above the median is  the same as its RMSE for states with total customers at or below the median. Any differences observed are due to random chance.
+
+Alternative Hypothesis: The model's RMSE for states with total customers above the median is significantly different than its RMSE for states with total customers at or below the median, indicating potential unfairness.
+
+Choice of Test Statistic:
+The test statistic used is the difference in RMSE between states with total customers above the median and states with total customers at or below the median.
+
+Significance Level:
+The significance level will be set at 0.05. This means that we will reject the null hypothesis if the probability of observing the test statistic under the null hypothesis (p-value) is less than 0.05.
 
 
+<iframe
+  src="assets/RMSE_perm.html"
+  width="900"
+  height="600"
+  frameborder="0"
+></iframe>
+
+With a significance level of 0.05 (typical significance level), a p-value of 0.021 is less than 0.05. Therefore, we reject the null hypothesis and conclude that there is a statistically significant difference in model performance between states with high and low total customers. In other words, the model's RMSE varies significantly between these two groups, suggesting potential fairness issues in the model's predictions across different levels of total customers.
 
 
 

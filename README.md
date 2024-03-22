@@ -36,9 +36,9 @@ The main question that I will be focusing on answering in this project is: What 
 
 Before we can begin to answer the question, it is imperative that we clean the data appropriately. The data was originally stored in an excel file, so first I had to convert the file into a csv and delete any empty rows and columns.
 
-The power outage start date and time are currently found in separate columns, 'OUTAGE.START.DATE' and `OUTAGE.START.TIME`, respectively. It would make more sense to have this data combined so I converted the time and data column into one pd.TimeStamp column. I have this column named as 'OUTAGE.START'. I then did same thing with the outage restoration time data as it was stored in a similar format.
+The power outage start date and time were also stored in separate columns, `OUTAGE.START.DATE` and `OUTAGE.START.TIME`, respectively. It would make more sense to have this data combined so I converted the time and data column into one pd.TimeStamp column. I have this column named as `OUTAGE.START`. I then did same thing with the outage restoration time data as it was stored in a similar format in the column `OUTAGE.RESTORATION`
 
-All of the numeric columns had values that were stored as strings in the original file (`OUTAGE.DURATION`, `YEAR`, `CUSTOMERS.AFFECTED`, and `DEMAND.LOSS.WM`). So I converted these columns into integers to ensure that I could work with these columns further in the analysis.
+All of the numeric columns had values that were stored as strings in the original file (`OUTAGE.DURATION`, `YEAR`, `CUSTOMERS.AFFECTED`,  `DEMAND.LOSS.WM` and `TOTAL.CUSTOMERS`). So I converted these columns into integers to ensure that I could work with these columns further in the analysis.
 
 After data cleaning, the first five of rows of the cleaned DataFrame looks like the following:
 
@@ -76,8 +76,7 @@ I then decided to look into the relationship between geographical location and o
 We can see that there are some states that have much higher counts of power outages in comparison to others. California has the highest overall with almost 200 outages. Having some knowledge about the typical climate can also help increase the relevancy of this plot to our investigation on how time, location and climate can impact the number of power outages. The two states with the highest number of outages are California and Texas; while local weather conditions can vary from year to year, both of these states are known for having some of the hottest summer in the United States.
 
 ### Bivariate Analysis
-
-Now that we have gotten an idea about how number of outages is distributed across several variables, let's look into the severity of an outage. One could classify severity through several ways. One being the duration of the outage and the other being the number of affected customers. Let's actually look at the relationship between these two to see if longer outages actually end up affecting more customers.
+After looking at the distribution of outages across different variables, I wanted to see if there were any significant relationships between variables. My investigation was centered around the metric of the severity of an outage. So, naturally I wanted to look into the relationship between variables that could be used to measure the severity of a power outage: `OUTAGE.DURATION` and `CUSTOMERS.AFFECTED`.
 
 <iframe
   src="assets/duration_vs_Customers_Affected.html"
@@ -90,9 +89,8 @@ The above plot shows that the duration of an outage doesn't really have a strong
 
 
 ### Interesting Aggregates
-
-Now let's look at the distribution of outages across months to see if there is any correlation to power outages and a given month. First we will create a pivot table to aggregate the power outages per month per year.
-Now let's look at the distribution of outages across months to see if there is any correlation to power outages and a given month. First we will create a pivot table to aggregate the power outages per month per year.
+Another question I had about the data was if there was any months in particular that there were more power outages. In the beginning of my investigation, I suspected that variables related to climate and location could possibly influence number of power outages. To answer these questions I decided to look at the distribution of outages across months to see if there is any correlation to power outages and a given month. First I created a pivot table to aggregate the power outages per month per year.
+Shown below is distribution of outages across months.
 
 |   YEAR |   January |   February |   March |   April |   May |   June |   July |   August |   September |   October |   November |   December |
 |-------:|----------:|-----------:|--------:|--------:|------:|-------:|-------:|---------:|------------:|----------:|-----------:|-----------:|
@@ -114,7 +112,7 @@ Now let's look at the distribution of outages across months to see if there is a
 |   2015 |         4 |         12 |       8 |       9 |     8 |     18 |     16 |        8 |           4 |         8 |          9 |         15 |
 |   2016 |         5 |          9 |      10 |       9 |    10 |      3 |     13 |        0 |           0 |         0 |          0 |          0 |
 
-We can use a heatmap to help us visualize the relationship.
+I also used a heatmap to help visualize the relationship.
 
 <iframe
   src="assets/heatmap.html"
@@ -132,7 +130,7 @@ Before progressing in the investigation, I did an assessment of missingness to d
 
 ### NMAR Analysis
 
-Our `CUSTOMERS.AFFECTED` column has 443 missing values. I believe that the missingness mechanism is most likely NMAR. The reason behind this is that those collecting the data might be less likely to record or report the numbers of customers affected if that value was smaller.
+The `CUSTOMERS.AFFECTED` column has 443 missing values. I believe that the missingness mechanism is most likely NMAR. The reason behind this is that those collecting the data might be less likely to record or report the numbers of customers affected if that value was smaller.
 
 By incorporating additional data sources or variables that explain the missingness mechanism, we can potentially make the missingness of the "Customers Affected" column missing at random (MAR) and address biases in the dataset. An additional column that indicates official outage severity metrics would be helpful in explaining the missingness in `CUSTOMERS.AFFECTED` If a specific outage was particularly insignificant in severity, this could explain why `CUSTOMERS.AFFECTED` might have missing values as less severe outages would be less important to report on. There are several columns in the dataset that can imply severity (duration, demand loss) but upon analysis those columns are not strongly correlated and can't serve as the sole determining factor of severity.
 
@@ -252,7 +250,7 @@ For the baseline model I decided to use `sklearn` one hot encoding to transform 
 
 ## Final Model
 
-For my final model, I chose to use a RandomForestRegressor, which is an ensemble learning method based on decision trees. Random forests combine multiple decision trees and average their predictions to improve generalization and reduce overfitting.
+For my final model, I chose to use RandomForestRegressor, which is an ensemble learning method based on decision trees. Random forests combine multiple decision trees and average their predictions to improve generalization and reduce overfitting.
 
 The hyperparameters I chose to tune were n_estimators and max_depth. n_estimators represents the number of trees in the forest, while max_depth controls the maximum depth of each tree. I used GridSearchCV to perform a grid search with 5-fold cross-validation. 
 
